@@ -485,10 +485,20 @@ def get_live_locations():
 
     for visit in maintenance_records:
         visit_doc = frappe.get_doc("Maintenance Visit", visit.name)
+
         #geolocation
-        delivery_note = frappe.get_doc("Delivery Note", visit_doc.delivery_address)
+        delivery_note_name = frappe.get_value(
+            "Delivery Note",
+            {"shipping_address": visit_doc.delivery_address},
+            "name"  # Fetch the name of the Delivery Note
+        )
+        if not delivery_note_name:
+            frappe.throw(f"No Delivery Note found for address: {visit_doc.delivery_address}")
+        delivery_note = frappe.get_doc("Delivery Note", delivery_note_name)
         address = frappe.get_doc("Address", delivery_note.shipping_address_name)
         geolocation = address.geolocation
+        if not geolocation:
+            frappe.throw(f"No geolocation found for address: {address.name}")
         geolocation = json.loads(geolocation)
 
         maintenance_visits.append({
