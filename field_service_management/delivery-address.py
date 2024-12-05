@@ -39,7 +39,17 @@ def get_items_for_address(doctype, txt, searchfield, start, page_len, filters):
             filters={"parent": note.name},  # Link between Delivery Note and Delivery Note Item
             fields=["item_code", "item_name", "serial_no", "parent"]
         )
-        items.extend(delivery_note_items)
+        # items.extend(delivery_note_items)
+
+        item_codes = [item["item_code"] for item in delivery_note_items]
+        flags = frappe.db.get_all(
+            "Item",
+            filters={"item_code": ["in", item_codes]},
+            fields=["item_code", "custom_flag"]
+        )
+        flag_map = {f["item_code"]: f["custom_flag"] for f in flags}
+        filtered_items = [item for item in delivery_note_items if flag_map.get(item["item_code"]) == '1']
+        items.extend(filtered_items)
 
     # Return the items in the expected format (value and description)
     return [
