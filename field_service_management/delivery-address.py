@@ -87,37 +87,48 @@ def get_delivery_note_data(delivery_address, item_code):
 
 @frappe.whitelist(allow_guest=True)
 def get_item_table(name):
-    childs = frappe.db.get_all(
-        "Item Maintenance Table",
-        filters = {"parent": name},
-        fields = ["heading", "content"]
+    childs = frappe.db.sql(
+        """
+        SELECT heading, content
+        FROM `tabItem Maintenance Table`
+        WHERE parent = %s
+        """,
+        (name,),
+        as_dict=True
     )
     return childs
 
 
 @frappe.whitelist(allow_guest=True)
 def get_symptoms_table(name):
-    childs = frappe.db.get_all(
-        "Symptom Resolution Table",
-        filters = {"parent": name},
-        fields = ["symptom_code", "resolution", "attach_image"]
+    childs = frappe.db.sql(
+        """
+        SELECT symptom_code, resolution, attach_image
+        FROM `tabSymptom Resolution Table`
+        WHERE parent = %s
+        """,
+        (name,),
+        as_dict=True
     )
     return childs
 
 
 @frappe.whitelist(allow_guest=True)
 def get_spare_items(name):
-    childs = frappe.db.get_all(
-        "Spare Part",
-        filters = {"parent": name},
-        fields = ["item_code", "description", "rate", "rate_eur", "periodicity", "frequency_in_years", "uom"]
+    childs = frappe.db.sql(
+        """
+        SELECT item_code, description, rate, rate_eur, periodicity, frequency_in_years, uom
+        FROM `tabSpare Part`
+        WHERE parent = %s
+        """,
+        (name,),
+        as_dict=True
     )
     return childs
 
 @frappe.whitelist(allow_guest=True)
 def get_item(name):
     childs = frappe.get_doc('Item', name)
-    print(childs)
     return childs
 
 
@@ -133,10 +144,14 @@ def get_item_code_from_child_table(cdn):
 
 @frappe.whitelist(allow_guest=True)
 def site_survey(name):
-    childs = frappe.db.get_all(
-        "Item Maintenance Table",
-        filters = {"parent": name},
-        fields = ["heading", "content"]
+    childs = frappe.db.sql(
+        """
+        SELECT heading, content
+        FROM `tabItem Maintenance Table`
+        WHERE parent = %s
+        """,
+        (name,),
+        as_dict=True
     )
     return childs
 
