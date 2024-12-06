@@ -94,7 +94,8 @@ def get_item_table(name):
         WHERE parent = %s
         """,
         (name,),
-        as_dict=True
+        as_dict=True,
+        ignore_permission=True
     )
     return childs
 
@@ -108,7 +109,8 @@ def get_symptoms_table(name):
         WHERE parent = %s
         """,
         (name,),
-        as_dict=True
+        as_dict=True,
+        ignore_permission=True
     )
     return childs
 
@@ -122,7 +124,8 @@ def get_spare_items(name):
         WHERE parent = %s
         """,
         (name,),
-        as_dict=True
+        as_dict=True,
+        ignore_permission=True
     )
     return childs
 
@@ -151,7 +154,8 @@ def site_survey(name):
         WHERE parent = %s
         """,
         (name,),
-        as_dict=True
+        as_dict=True,
+        ignore_permission=True
     )
     return childs
 
